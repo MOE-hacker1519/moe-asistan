@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>MOE ASİSTAN</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #050505; 
+            color: white; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            overflow: hidden;
+            position: relative;
+        }
+
+        #dateTimeContainer {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+
+        #time {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #007bff; 
+            margin: 0;
+        }
+
+        #date {
+            font-size: 1em;
+            color: #55aaff; 
+            margin: 5px 0 0 0;
+        }
+
+        /* İstediğin devasa ve tam siyah dikdörtgen alanı */
+        #chat-container { 
+            width: 95%; 
+            max-width: 1100px; 
+            height: 88vh; 
+            background: #000000; 
+            border-radius: 15px; 
+            padding: 30px; 
+            box-shadow: 0 0 40px rgba(0,123,255,0.15); 
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #001a33; 
+        }
+
+        #chat-header {
+            text-align: center;
+            color: #007bff; 
+            margin: 0 0 20px 0;
+            font-size: 2.2em;
+            font-weight: 300;
+            letter-spacing: 3px;
+            border-bottom: 1px solid #001a33;
+            padding-bottom: 15px;
+        }
+
+        #chat-box { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding-right: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #chat-box::-webkit-scrollbar { width: 5px; }
+        #chat-box::-webkit-scrollbar-thumb { background: #003366; border-radius: 10px; }
+
+        .message { 
+            margin: 12px 0; 
+            padding: 14px 18px; 
+            border-radius: 12px; 
+            line-height: 1.5; 
+            max-width: 75%;
+            font-size: 1.1em;
+        }
+
+        .user-msg { 
+            background: #004085; 
+            color: white; 
+            align-self: flex-end; 
+            border-bottom-right-radius: 2px; 
+        }
+
+        .moe-msg { 
+            background: #111111; 
+            color: #007bff; 
+            align-self: flex-start; 
+            border-bottom-left-radius: 2px; 
+            border-left: 5px solid #007bff; 
+        }
+
+        .input-area { 
+            display: flex; 
+            gap: 15px; 
+            border-top: 1px solid #001a33;
+            padding-top: 20px;
+        }
+
+        input { 
+            flex: 1; 
+            padding: 18px; 
+            border-radius: 8px; 
+            border: 1px solid #001a33; 
+            background: #0a0a0a;
+            color: #007bff; 
+            font-size: 1.2em;
+            outline: none;
+        }
+        
+        button { 
+            padding: 18px 40px; 
+            background: #007bff; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            color: black; 
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="dateTimeContainer">
+        <p id="time"></p>
+        <p id="date"></p>
+    </div>
+
+    <div id="chat-container">
+        <h2 id="chat-header">MOE ASİSTAN</h2>
+        <div id="chat-box">
+            <div class="message moe-msg">Bağlantı kuruldu. Merhaba, ben MOE. Senin için ne yapabilirim?</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Mesajınızı buraya yazın..." onkeypress="if(event.key==='Enter') gonder()">
+            <button onclick="gonder()">GÖNDER</button>
+        </div>
+    </div>
+
+    <script>
+        function guncelleSaatTarih() {
+            const simdi = new Date();
+            document.getElementById('time').innerText = simdi.toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'});
+            const seçenekler = { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' };
+            document.getElementById('date').innerText = simdi.toLocaleDateString('tr-TR', seçenekler);
+        }
+        guncelleSaatTarih();
+        setInterval(guncelleSaatTarih, 1000);
+
+        async function gonder() {
+            const input = document.getElementById("userInput");
+            const chatBox = document.getElementById("chat-box");
+            const text = input.value;
+            if (!text) return;
+
+            chatBox.innerHTML += `<div class="message user-msg">${text}</div>`;
+            input.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                const response = await fetch("http://localhost:3000/moe-sor", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: text })
+                });
+                const data = await response.json();
+                chatBox.innerHTML += `<div class="message moe-msg">${data.reply}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } catch (error) {
+                chatBox.innerHTML += `<div class="message moe-msg" style="color: red;">Hata: Sunucuya ulaşılamıyor!</div>`;
+            }
+        }
+    </script>
+</body>
+</html>
