@@ -49,3 +49,4 @@ app.listen(3000, () => {
     console.log("🔗 Adres: http://localhost:3000");
     console.log("------------------------------------------");
 });
+module.exports = app;
