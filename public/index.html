@@ -167,11 +167,11 @@
             chatBox.scrollTop = chatBox.scrollHeight;
 
             try {
-                const response = await fetch('/api/chat', ...)
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: text })
-                });
+                const response = await fetch('/api/chat', { // Başına nokta koyma, sadece /api/chat
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: userMessage })
+});
                 const data = await response.json();
                 chatBox.innerHTML += `<div class="message moe-msg">${data.reply}</div>`;
                 chatBox.scrollTop = chatBox.scrollHeight;
