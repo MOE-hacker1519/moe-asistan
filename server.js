@@ -10,7 +10,7 @@ app.use(express.json());
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // ÖNEMLİ: Hem vercel.json hem index.html ile uyumlu olması için yolu "/api/chat" yaptık
-app.post("/api/chat", async (req, res) => {
+app.post("/api/chat", async (req, res) => { ... });
     const kullaniciMesaji = req.body.message;
 
     try {
