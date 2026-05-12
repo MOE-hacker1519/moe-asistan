@@ -167,8 +167,9 @@
             chatBox.scrollTop = chatBox.scrollHeight;
 
             try {
-                const response = await fetch('/api/chat', { // Başına nokta koyma, sadece /api/chat
+               const response = await fetch('/api/chat', { 
     method: 'POST',
+    // ... geri kalanlar aynı
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ message: userMessage })
 });
