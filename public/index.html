@@ -166,12 +166,23 @@
             input.value = "";
             chatBox.scrollTop = chatBox.scrollHeight;
 
-            try {
-              const response = await fetch('/api/chat', { 
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: userMessage })
-});
+           try {
+    // Başına mutlaka "const response = await" ekliyoruz:
+    const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: kullaniciMesaji })
+    }); // <--- Buradaki parantezi kapatıp noktalı virgül koyduk
+
+    const data = await response.json();
+    chatBox.innerHTML += `<div class="message moe-msg">${data.reply}</div>`; // veya senin değişken adın neyse
+    chatBox.scrollTop = chatBox.scrollHeight;
+} catch (error) {
+    console.error("Hata oluştu:", error);
+    chatBox.innerHTML += `<div class="message error-msg">Hata: Sunucuya ulaşılamıyor!</div>`;
+}
                 const data = await response.json();
                 chatBox.innerHTML += `<div class="message moe-msg">${data.reply}</div>`;
                 chatBox.scrollTop = chatBox.scrollHeight;
