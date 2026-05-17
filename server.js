@@ -33,13 +33,10 @@ app.post("/api/chat", async (req, res) => { ... });
     }
 });
 
-// Yerel testler için port ayarı
+// server.js dosyanın en alt kısımlarında bu olmalı:
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log("------------------------------------------");
-    console.log("🚀 MOE GEMINI SİSTEMİ ÇALIŞIYOR!");
-    console.log(`🔗 Adres: http://localhost:${PORT}`);
-    console.log("------------------------------------------");
+    console.log(`Sunucu ${PORT} portunda çalışıyor`);
 });
 
-module.exports = app;
+module.exports = app; // Vercel için bu satır çok önemli!
