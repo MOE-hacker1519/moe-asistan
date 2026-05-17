@@ -2,178 +2,194 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JARVIS OS - MOE AI</title>
+    <title>MOE ASİSTAN</title>
     <style>
-        * {
-            box-sizing: border-box;
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #050505; 
+            color: white; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            overflow: hidden;
+            position: relative;
+        }
+
+        #dateTimeContainer {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+
+        #time {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #007bff; 
             margin: 0;
-            padding: 0;
         }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0a0f1d;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
+
+        #date {
+            font-size: 1em;
+            color: #55aaff; 
+            margin: 5px 0 0 0;
         }
-        .chat-container {
-            width: 450px;
-            height: 85vh;
-            background: rgba(16, 24, 48, 0.95);
-            border: 2px solid #00d2ff;
-            border-radius: 15px;
-            box-shadow: 0 0 25px rgba(0, 210, 255, 0.3);
+
+        /* İstediğin devasa ve tam siyah dikdörtgen alanı */
+        #chat-container { 
+            width: 95%; 
+            max-width: 1100px; 
+            height: 88vh; 
+            background: #000000; 
+            border-radius: 15px; 
+            padding: 30px; 
+            box-shadow: 0 0 40px rgba(0,123,255,0.15); 
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            border: 1px solid #001a33; 
         }
-        .chat-header {
-            background: #0f1a30;
-            padding: 15px;
+
+        #chat-header {
             text-align: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            letter-spacing: 1px;
-            border-bottom: 2px solid #00d2ff;
-            text-transform: uppercase;
-            color: #00d2ff;
-            text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+            color: #007bff; 
+            margin: 0 0 20px 0;
+            font-size: 2.2em;
+            font-weight: 300;
+            letter-spacing: 3px;
+            border-bottom: 1px solid #001a33;
+            padding-bottom: 15px;
         }
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
+
+        #chat-box { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding-right: 15px;
+            margin-bottom: 20px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
         }
-        .chat-messages::-webkit-scrollbar {
-            width: 6px;
+
+        #chat-box::-webkit-scrollbar { width: 5px; }
+        #chat-box::-webkit-scrollbar-thumb { background: #003366; border-radius: 10px; }
+
+        .message { 
+            margin: 12px 0; 
+            padding: 14px 18px; 
+            border-radius: 12px; 
+            line-height: 1.5; 
+            max-width: 75%;
+            font-size: 1.1em;
         }
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: #00d2ff;
-            border-radius: 3px;
+
+        .user-msg { 
+            background: #004085; 
+            color: white; 
+            align-self: flex-end; 
+            border-bottom-right-radius: 2px; 
         }
-        .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 10px;
-            line-height: 1.4;
-            font-size: 0.95rem;
-            word-wrap: break-word;
+
+        .moe-msg { 
+            background: #111111; 
+            color: #007bff; 
+            align-self: flex-start; 
+            border-bottom-left-radius: 2px; 
+            border-left: 5px solid #007bff; 
         }
-        .user-message {
-            background: #0056b3;
-            color: #ffffff;
-            align-self: flex-end;
-            border-bottom-right-radius: 2px;
-            box-shadow: 0 4px 10px rgba(0, 86, 179, 0.3);
+
+        .input-area { 
+            display: flex; 
+            gap: 15px; 
+            border-top: 1px solid #001a33;
+            padding-top: 20px;
         }
-        .moe-message {
-            background: #1e293b;
-            color: #e2e8f0;
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
-            border: 1px solid rgba(0, 210, 255, 0.2);
-        }
-        .chat-input-area {
-            padding: 15px;
-            background: #0f1a30;
-            display: flex;
-            gap: 10px;
-            border-top: 1px solid rgba(0, 210, 255, 0.2);
-        }
-        .chat-input-area input {
-            flex: 1;
-            background: #0a0f1d;
-            border: 1px solid #00d2ff;
-            padding: 12px;
-            border-radius: 8px;
-            color: white;
-            font-size: 0.95rem;
+
+        input { 
+            flex: 1; 
+            padding: 18px; 
+            border-radius: 8px; 
+            border: 1px solid #001a33; 
+            background: #0a0a0a;
+            color: #007bff; 
+            font-size: 1.2em;
             outline: none;
-            transition: all 0.3s ease;
         }
-        .chat-input-area input:focus {
-            box-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
-        }
-        .chat-input-area button {
-            background: #00d2ff;
-            color: #0a0f1d;
-            border: none;
-            padding: 0 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-        }
-        .chat-input-area button:hover {
-            background: #0099cc;
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.6);
-            color: white;
+        
+        button { 
+            padding: 18px 40px; 
+            background: #007bff; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            color: black; 
+            font-size: 1.1em;
         }
     </style>
 </head>
 <body>
 
-<div class="chat-container">
-    <div class="chat-header">MOE INTELLECT - ONLINE</div>
-    <div class="chat-messages" id="chatBox"></div>
-    <div class="chat-input-area">
-        <input type="text" id="userInput" placeholder="Sisteme bir emir verin veya mesaj yazın...">
-        <button id="sendBtn" onclick="mesajGonder()">Gönder</button>
+    <div id="dateTimeContainer">
+        <p id="time"></p>
+        <p id="date"></p>
     </div>
-</div>
 
-<script>
-async function mesajGonder() {
-    const inputElement = document.getElementById('userInput');
-    const chatBox = document.getElementById('chatBox');
-    const mesajMetni = inputElement.value.trim();
+    <div id="chat-container">
+        <h2 id="chat-header">MOE ASİSTAN</h2>
+        <div id="chat-box">
+            <div class="message moe-msg">Bağlantı kuruldu. Merhaba, ben MOE. Senin için ne yapabilirim?</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Mesajınızı buraya yazın..." onkeypress="if(event.key==='Enter') gonder()">
+            <button onclick="gonder()">GÖNDER</button>
+        </div>
+    </div>
 
-    if (!mesajMetni) return;
-
-    // Kullanıcı mesajını ekrana yaz
-    chatBox.innerHTML += `<div class="message user-message">${mesajMetni}</div>`;
-    inputElement.value = '';
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-    try {
-        // Vercel'deki server.js dosyasına istek atılıyor
-        const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ message: mesajMetni })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            chatBox.innerHTML += `<div class="message moe-message">${data.reply}</div>`;
-        } else {
-            chatBox.innerHTML += `<div class="message moe-message" style="border-color: #ef4444; color: #fca5a5;">Hata: ${data.reply || 'Sunucu içi kısıtlama.'}</div>`;
+    <script>
+        // Saat ve Tarih Güncelleme
+        function guncelleSaatTarih() {
+            const simdi = new Date();
+            document.getElementById('time').innerText = simdi.toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'});
+            const seçenekler = { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' };
+            document.getElementById('date').innerText = simdi.toLocaleDateString('tr-TR', seçenekler);
         }
-    } catch (error) {
-        console.error(error);
-        chatBox.innerHTML += `<div class="message moe-message" style="border-color: #ef4444; color: #fca5a5;">Hata: Sunucuya ulaşılamıyor.</div>`;
-    }
+        guncelleSaatTarih();
+        setInterval(guncelleSaatTarih, 1000);
 
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
+        // Mesaj Gönderme Fonksiyonu (Düzeltilen Kısım)
+        async function gonder() {
+            const input = document.getElementById("userInput");
+            const chatBox = document.getElementById("chat-box");
+            const text = input.value.trim();
+            if (!text) return;
 
-document.getElementById('userInput').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-        mesajGonder();
-    }
-});
-</script>
+            // Kullanıcı mesajını ekrana bas
+            chatBox.innerHTML += `<div class="message user-msg">${text}</div>`;
+            input.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
 
+            try {
+                // Vercel /api/chat endpoint'ine düzgünce fetch atıyoruz
+                const response = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: text })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    chatBox.innerHTML += `<div class="message moe-msg">${data.reply}</div>`;
+                } else {
+                    chatBox.innerHTML += `<div class="message moe-msg" style="color: #ff4d4d; border-color: #ff4d4d;">Hata: ${data.reply || 'Bir sorun oluştu.'}</div>`;
+                }
+            } catch (error) {
+                console.error("Hata:", error);
+                chatBox.innerHTML += `<div class="message moe-msg" style="color: #ff4d4d; border-color: #ff4d4d;">Hata: Sunucuya ulaşılamıyor!</div>`;
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
 </body>
 </html>
