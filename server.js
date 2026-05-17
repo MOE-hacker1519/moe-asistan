@@ -10,16 +10,23 @@ app.use(express.json());
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // ÖNEMLİ: Hem vercel.json hem index.html ile uyumlu olması için yolu "/api/chat" yaptık
-app.post("/api/chat", async (req, res) => { ... });
-    const kullaniciMesaji = req.body.message;
-
+app.post("/api/chat", async (req, res) => {
     try {
-        // Gemini 1.5 Flash modelini başlatıyoruz (Hızlı ve etkili)
-        const model = genAI.getGenerativeModel({ 
-            model: "gemini-1.5-flash",
-            systemInstruction: "Senin adın MOE. 11 yaşındaki bir geliştirici tarafından yapıldın. Çok nazik, komik ve zeki bir asistansın."
-        });
+        const kullaniciMesaji = req.body.message;
 
+        // --- BURADA SENİN GEMINI API KODLARIN OLMALI ---
+        // Örnek olarak mantık şudur:
+        // const response = await ... (Gemini'ye istek atma kodu)
+        // const botCevabi = ...
+        
+        // Şimdilik test etmek için bot direkt bunu dönsün, kodun çalıştığını görelim:
+        res.json({ reply: "Selam kanka, MOE şu an sunucudan cevap veriyor!" });
+
+    } catch (error) {
+        console.error("Gemini hatası:", error);
+        res.status(500).json({ reply: "Yapay zeka tarafında bir hata oluştu." });
+    }
+});
         const result = await model.generateContent(kullaniciMesaji);
         const response = await result.response;
         const text = response.text();
